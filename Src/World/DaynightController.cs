@@ -4,13 +4,14 @@ using System.Collections;
 public class DaynightController : MonoBehaviour {
 
     public Light sun;
+	public Light subLight;
     public float timeInDay = 120f, currentTime = 0f;
 
 	public Material skyDay;
 	public Material skyNight;
 
     private GameObject sunPOS, player;
-    public bool night = true;
+    public bool night = false;
     private Vector3 cameraPos;
 
 	private bool skyboxNight = false;
@@ -18,7 +19,13 @@ public class DaynightController : MonoBehaviour {
     private float intesity, IntensityMultiplier, sunPosX, sunPosY, temp;
     
 	void Start () {
-        sunPOS = GameObject.Find("Directional Light");
+
+		//Default to Sun
+		GetComponent<MeshRenderer>().material.color = new Color32(255, 255, 255, 255);
+		subLight.color = new Color32(255, 69, 0, 255);
+		subLight.intensity = 0.5f;
+
+        sunPOS = GameObject.Find("Sun_Moon");
         player = GameObject.Find("Main Camera");
 
         sunPosX = 0f; sunPosY = 0f;
@@ -33,26 +40,40 @@ public class DaynightController : MonoBehaviour {
         IntensityModifier();
         UpdateLocation();
 
-        currentTime += (Time.deltaTime / timeInDay) * 2f;
+        currentTime += (Time.deltaTime / timeInDay) * 10f;
 
         if (currentTime >= 1) {
             currentTime = 0;
             sunPosX = 0f; sunPosY = 0f;
 
-            if (night)
+            if (!night)
             {
                 sun.color = Color.white;
 
 				if (!skyboxNight) {
+
+					//Change Sun to Moon
+					GetComponent<MeshRenderer>().material.color = new Color32(255, 255, 255, 255);
+					subLight.color = new Color32(111, 165, 255, 255);
+					subLight.intensity = 2.11f;
+
+					RenderSettings.ambientIntensity = 0.3f;
 					RenderSettings.skybox = skyNight;
 					skyboxNight = true;
 				}
 
             }
             else {
-                sun.color = new Color(0.74F, 0.906f, 1, 1);//Color.blue;
+				sun.color = Color.white;
 
 				if (skyboxNight) {
+
+					//Change Moon to Sun
+					GetComponent<MeshRenderer>().material.color = new Color32(255, 255, 255, 255);
+					subLight.color = new Color32(255, 153, 0, 255);
+					subLight.intensity = 0.5f;
+
+
 					RenderSettings.skybox = skyDay;
 					skyboxNight = false;
 				}
@@ -63,31 +84,50 @@ public class DaynightController : MonoBehaviour {
     }
 
     private void UpdateRotation() {
-        //Transform anchor = player.transform;
-        //anchor.position = new Vector3(anchor.position.x, 0f, 0f);
-        sun.transform.LookAt(player.transform);          //  roRotate(new Vector3(0f, 0f, 0f));      //RotateAround(player.transform.position, sunPOS.transform.position, 20 * Time.deltaTime);      //localRotation = Quaternion.Euler((currentTime * 360) - 90, 180, 0f);
+
+        sun.transform.LookAt(player.transform);
+		subLight.transform.LookAt (sun.transform);
     }
 
     private void IntensityModifier() {
 
         IntensityMultiplier = 4;
 
-        if (!night) {
-			IntensityMultiplier = IntensityMultiplier / 6;
+        if (night) {
+			IntensityMultiplier = IntensityMultiplier / 2;
 		}
 
-        if (currentTime > 0.5)
-        {
-            temp = 1.5f - currentTime;
-        }
-        else
-        {
-            temp = .5f + currentTime;
-        }
+        if (currentTime > 0.5) {
+			if (night) {
+				RenderSettings.ambientIntensity = 0.6f - (currentTime - 0.5f) * 0.6f;
+			} 
+			else {
+				RenderSettings.ambientIntensity = 1f - (currentTime - 0.5f) * 1.4f;
+				subLight.intensity -= 0.01f;
+			}
 
-        temp = temp / 5;
+			//Decrease Moon size as it moves away from the player
+			transform.localScale -= new Vector3(0.05f, 0.05f, 0.05f);
 
-        IntensityMultiplier = IntensityMultiplier * temp;
+
+		} 
+		else if (currentTime < 0.5) {
+
+			if (night) {
+				RenderSettings.ambientIntensity = 0.3f + currentTime * 0.6f;
+			} 
+			else {
+				RenderSettings.ambientIntensity = 0.3f + currentTime * 1.5f;
+				subLight.intensity += 0.01f;
+			}
+			//Increase Moon size as it moves nearer the player in the sky
+			transform.localScale += new Vector3(0.05f, 0.05f, 0.05f);
+
+		}
+
+		temp = (0.05f + currentTime)/5;
+
+		IntensityMultiplier = IntensityMultiplier * temp;
 
         sun.intensity = IntensityMultiplier;
     }

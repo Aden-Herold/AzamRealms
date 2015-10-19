@@ -59,32 +59,47 @@ public Chunk ChunkGen(Chunk chunk) {
 		int hum = humidity.GetHumidityHeight(x, z);
 
 		for (int y = chunk.pos.y - 8; y < chunk.pos.y + Chunk.chunkSize; y++) {
+
+			//Snow Biome
 			if(temp <= 20 && hum <= 20) {
+
 				if (y <= stoneHeight) {
 					SetBlock(x, y, z, new Block(), chunk);
-				} else if (y <= dirtHeight) {
+				} 
+				else if (y <= dirtHeight) {
 					SetBlock(x, y, z, new BlockSnow(), chunk);
+
 					if(y == dirtHeight && GetNoise(x, 0, z, grassFrequency, 100) < grassDensity) {
 						SetBlock(x, y+1, z, new BlockTallGrassSnow(), chunk);
 					}
 					if(y == dirtHeight && GetNoise(x, 0, z, pineTreeFrequency, 100) < pineTreeDensity) {
 						CreateSprucePineTree(x, y+1, z, chunk);
 					}
-				} else {
+				} 
+				else {
 					SetBlock(x, y, z, new BlockAir(), chunk);
 				}
-			} else if(temp > 20 && hum <= 20) {
+			} 
+			//Desert Biome
+			else if(temp > 20 && hum <= 20) {
+
 				if (y <= stoneHeight) {
 					SetBlock(x, y, z, new Block(), chunk);
-				} else if (y <= dirtHeight) {
+				} 
+				else if (y <= dirtHeight) {
 					SetBlock(x, y, z, new BlockSand(), chunk);
-				} else {
+				} 
+				else {
 					SetBlock(x, y, z, new BlockAir(), chunk);
 				}
-			} else {
+			} 
+			//Grass Biome
+			else {
+
 				if (y <= stoneHeight) {
 					SetBlock(x, y, z, new Block(), chunk);
-				} else if (y <= dirtHeight) {
+				} 
+				else if (y <= dirtHeight) {
 					SetBlock(x, y, z, new BlockGrass(), chunk);
 
 					if(y == dirtHeight && GetNoise(x, 0, z, grassFrequency, 100) < grassDensity) {
@@ -96,7 +111,8 @@ public Chunk ChunkGen(Chunk chunk) {
 					if(y == dirtHeight && GetNoise(x, 0, z, thickTreeFrequency, 100) < thickTreeDensity) {
 						CreateOakThickTree(x, y+1, z, chunk);
 					}
-				} else {
+				} 
+				else {
 					SetBlock(x, y, z, new BlockAir(), chunk);
 				}
 			}
