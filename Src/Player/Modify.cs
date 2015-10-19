@@ -31,24 +31,35 @@ public class Modify : MonoBehaviour
 				if (hit.collider.gameObject.tag == "Enemy") {
 					hit.collider.gameObject.GetComponent<fleshgolem_AI>().takeDamage(20);
 				}
-				else{
-					if(EditTerrain.getBlock(hit).getMaterialType().Equals("Wood")) {
+				else
+				{
+					if(EditTerrain.getBlock(hit).getMaterialType().Equals("Wood")) 
+					{
 						blockParticles.GetComponent<ParticleSystem>().GetComponent<Renderer>().sharedMaterial.SetColor("_Color", new Color32(137, 115, 71, 255));
-					} else if(EditTerrain.getBlock(hit).getMaterialType().Equals("Dirt")) {
+					} 
+					else if(EditTerrain.getBlock(hit).getMaterialType().Equals("Dirt")) 
+					{
 						blockParticles.GetComponent<ParticleSystem>().GetComponent<Renderer>().sharedMaterial.SetColor("_Color", new Color32(102, 51, 0, 255));
-					} else if(EditTerrain.getBlock(hit).getMaterialType().Equals("Leaves")) {
+					} 
+					else if(EditTerrain.getBlock(hit).getMaterialType().Equals("Leaves")) 
+					{
 						blockParticles.GetComponent<ParticleSystem>().GetComponent<Renderer>().sharedMaterial.SetColor("_Color", new Color32(0, 102, 0, 255));
 					}
+
 					Instantiate(blockParticles, hit.point, blockParticles.transform.rotation);
 					Inventory.addToInventory(EditTerrain.getBlock(hit).getBlockID(), EditTerrain.getBlock(hit).getPathToIcon());
 					EditTerrain.setBlock(hit, new BlockAir());
 				}
 			}
-		} if (Input.GetKeyDown(KeyCode.Q)) {
+		}
+		if (Input.GetKeyDown(KeyCode.Q)) 
+		{
 			RaycastHit hit;
-			if (Physics.Raycast(transform.position, transform.forward,out hit, 5 )) {
-				if(Inventory.removeFromInventory(Inventory.getSlotID(Inventory.getCurrentSlot() - 1))) {
+			if (Physics.Raycast(transform.position, transform.forward,out hit, 5 ))
+			{
+				if (!Inventory.slotEmpty(Inventory.getCurrentSlot()-1)) {
 					EditTerrain.setBlock(hit, bh.findBlock(Inventory.getSlotID(Inventory.getCurrentSlot() - 1)), true);
+					Inventory.removeFromInventory(Inventory.getSlotID(Inventory.getCurrentSlot() - 1));
 				}
 			}
 		}

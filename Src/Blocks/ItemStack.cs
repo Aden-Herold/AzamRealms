@@ -7,11 +7,11 @@ public class ItemStack {
 	private int itemID;
 	private int stackSize;
 	private string pathToIcon;
-	private int maxStackSize = 5;
+	private int maxStackSize = 100;
 
 	public ItemStack(int itemID, string itemIcon) {
 		this.itemID = itemID;
-		this.pathToIcon = pathToIcon;
+		this.pathToIcon = itemIcon;
 	}
 
 	public int getItemID() {

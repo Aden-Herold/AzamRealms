@@ -3,6 +3,7 @@ using System.Collections;
 using System;
 using System.IO;
 using System.Text;
+using UnityEngine.UI;
 
 [Serializable]
 public static class Inventory {
@@ -14,14 +15,25 @@ public static class Inventory {
 	static int currentSlot = 1;
 
 	public static void addToInventory(int itemID, string pathToIcon) {
+		itemHUD_Controls hud = GameObject.Find ("ItemHUD").GetComponent<itemHUD_Controls>();
+
 		for(int i = 0; i < maxInventorySize; i++) {
 			if(inv[i] == null) {
 				inv[i] = new ItemStack(itemID, pathToIcon);
+
+				//Update Icon in Inventory HUD
+				hud.items[i].GetComponent<Image> ().sprite = Resources.Load<Sprite> (pathToIcon);
+				hud.items[i].GetComponent<Image> ().color = new Color32(255, 255, 255, 255);
 				inv[i].incrementStack();
+				//Update stack counter
+				hud.items[i].GetComponentInChildren<Text>().text = getSlotStackSize(i).ToString();
+				Resources.UnloadUnusedAssets();
+
 				break;
 			} else {
 				if(inv[i].getItemID() == itemID && !inv[i].checkStackFull()) {
 					inv[i].incrementStack();
+					hud.items[i].GetComponentInChildren<Text>().text = getSlotStackSize(i).ToString();
 					break;
 				}
 			}
@@ -29,12 +41,28 @@ public static class Inventory {
 	}
 
 	public static bool removeFromInventory(int itemID) {
+		itemHUD_Controls hud = GameObject.Find ("ItemHUD").GetComponent<itemHUD_Controls>();
+
 		for(int i = 0; i < maxInventorySize; i++) {
-			if(inv[i] != null) {
-				if(inv[i].getItemID() == itemID) {
+			if(inv[i] != null) 
+			{
+				if(inv[i].getItemID() == itemID) 
+				{
 					if(inv[i].decrementStack()) {
+						//Update stack counter
+						hud.items[i].GetComponentInChildren<Text>().text = getSlotStackSize(i).ToString();
+
+						//Reset sprite to default if stack is empty
+						if (inv[i].checkStackEmpty()) {
+							hud.items[i].GetComponent<Image> ().sprite = new Sprite();
+							hud.items[i].GetComponent<Image> ().color = new Color32(146, 146, 146, 255);
+							inv[i] = null;
+							Resources.UnloadUnusedAssets();
+						}
+
 						return true;
-					} else {
+					} 
+					else {
 						inv[i] = null;
 						return true;
 					}
@@ -42,6 +70,58 @@ public static class Inventory {
 			}
 		}
 		return false;
+	}
+
+	public static void swapItems(int firstItem, int secondItem) {
+		ItemStack tempStack;
+		itemHUD_Controls hud = GameObject.Find ("ItemHUD").GetComponent<itemHUD_Controls>();
+
+		tempStack = inv [firstItem];
+		inv [firstItem] = inv [secondItem];
+		inv [secondItem] = tempStack;
+
+		if (inv [firstItem] != null) {
+			hud.items [firstItem].GetComponent<Image> ().sprite = Resources.Load<Sprite> (inv [firstItem].getPathToIcon ());
+			hud.items [firstItem].GetComponentInChildren<Text> ().text = getSlotStackSize (firstItem).ToString ();
+		} 
+		else {
+			hud.items [firstItem].GetComponent<Image> ().sprite = new Sprite();
+			hud.items[firstItem].GetComponent<Image> ().color = new Color32(146, 146, 146, 255);
+			hud.items [firstItem].GetComponentInChildren<Text> ().text = "0";
+		}
+
+		if (inv [secondItem] != null) {
+			hud.items [secondItem].GetComponent<Image> ().sprite = Resources.Load<Sprite> (inv [secondItem].getPathToIcon ());
+			hud.items [secondItem].GetComponentInChildren<Text> ().text = getSlotStackSize (secondItem).ToString ();
+		}
+		else {
+			hud.items [secondItem].GetComponent<Image> ().sprite = new Sprite();
+			hud.items[secondItem].GetComponent<Image> ().color = new Color32(146, 146, 146, 255);
+			hud.items [secondItem].GetComponentInChildren<Text> ().text = "0";
+		}
+	}
+
+	public static bool isEmpty() {
+		bool empty = true;
+
+		for (int x = 0; x < inv.Length; x++) {
+			if (inv[x] != null) {
+				empty = false;
+			}
+		}
+
+		return empty;
+	}
+
+	public static bool slotEmpty(int index) {
+		bool empty = true;
+
+		if (inv[index] != null) {
+
+			empty = false;
+		}
+
+		return empty;
 	}
 
 	public static int getSlotID(int index) {
