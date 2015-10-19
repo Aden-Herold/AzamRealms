@@ -5,13 +5,14 @@ public class DaynightController : MonoBehaviour {
 
     public Light sun;
 	public Light subLight;
-    public float timeInDay = 120f, currentTime = 0f;
-
 	public Material skyDay;
 	public Material skyNight;
+	
+	public float moonIntensity = 0.6f;
 
+	private float timeInDay = 120f, currentTime = 0f;
     private GameObject sunPOS, player;
-    public bool night = false;
+    private bool night = false;
     private Vector3 cameraPos;
 
 	private bool skyboxNight = false;
@@ -99,7 +100,7 @@ public class DaynightController : MonoBehaviour {
 
         if (currentTime > 0.5) {
 			if (night) {
-				RenderSettings.ambientIntensity = 0.6f - (currentTime - 0.5f) * 0.6f;
+				RenderSettings.ambientIntensity = (0.3f+0.5f*moonIntensity) - (currentTime - 0.5f) * moonIntensity;
 			} 
 			else {
 				RenderSettings.ambientIntensity = 1f - (currentTime - 0.5f) * 1.4f;
@@ -114,7 +115,7 @@ public class DaynightController : MonoBehaviour {
 		else if (currentTime < 0.5) {
 
 			if (night) {
-				RenderSettings.ambientIntensity = 0.3f + currentTime * 0.6f;
+				RenderSettings.ambientIntensity = 0.3f + currentTime * moonIntensity;
 			} 
 			else {
 				RenderSettings.ambientIntensity = 0.3f + currentTime * 1.5f;
