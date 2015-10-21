@@ -148,7 +148,6 @@ public class fleshgolem_AI : MonoBehaviour {
 	}
 
 	public void takeDamage (int damageAmount) {
-		Debug.Log("Anus");
 		if (damageAmount < 0)
 			damageAmount *= -1;
 

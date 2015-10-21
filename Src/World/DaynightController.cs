@@ -7,7 +7,8 @@ public class DaynightController : MonoBehaviour {
 	public Light subLight;
 	public Material skyDay;
 	public Material skyNight;
-	
+
+	public float timeSpeed = 2f;
 	public float moonIntensity = 0.6f;
 
 	private float timeInDay = 120f, currentTime = 0f;
@@ -41,7 +42,7 @@ public class DaynightController : MonoBehaviour {
         IntensityModifier();
         UpdateLocation();
 
-        currentTime += (Time.deltaTime / timeInDay) * 10f;
+        currentTime += (Time.deltaTime / timeInDay) * timeSpeed;
 
         if (currentTime >= 1) {
             currentTime = 0;
@@ -104,11 +105,11 @@ public class DaynightController : MonoBehaviour {
 			} 
 			else {
 				RenderSettings.ambientIntensity = 1f - (currentTime - 0.5f) * 1.4f;
-				subLight.intensity -= 0.01f;
+				//subLight.intensity -= 0.005f;       <===================================================
 			}
 
 			//Decrease Moon size as it moves away from the player
-			transform.localScale -= new Vector3(0.05f, 0.05f, 0.05f);
+			//transform.localScale -= new Vector3(0.05f, 0.05f, 0.05f);   <===================================================
 
 
 		} 
@@ -119,10 +120,10 @@ public class DaynightController : MonoBehaviour {
 			} 
 			else {
 				RenderSettings.ambientIntensity = 0.3f + currentTime * 1.5f;
-				subLight.intensity += 0.01f;
+				//subLight.intensity += 0.005f;       <===================================================
 			}
 			//Increase Moon size as it moves nearer the player in the sky
-			transform.localScale += new Vector3(0.05f, 0.05f, 0.05f);
+			//transform.localScale += new Vector3(0.05f, 0.05f, 0.05f);      <===================================================
 
 		}
 

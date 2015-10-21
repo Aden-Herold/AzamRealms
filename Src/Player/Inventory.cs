@@ -80,24 +80,21 @@ public static class Inventory {
 		inv [firstItem] = inv [secondItem];
 		inv [secondItem] = tempStack;
 
-		if (inv [firstItem] != null) {
-			hud.items [firstItem].GetComponent<Image> ().sprite = Resources.Load<Sprite> (inv [firstItem].getPathToIcon ());
-			hud.items [firstItem].GetComponentInChildren<Text> ().text = getSlotStackSize (firstItem).ToString ();
-		} 
-		else {
-			hud.items [firstItem].GetComponent<Image> ().sprite = new Sprite();
-			hud.items[firstItem].GetComponent<Image> ().color = new Color32(146, 146, 146, 255);
-			hud.items [firstItem].GetComponentInChildren<Text> ().text = "0";
-		}
+		swapUpdateIcons (firstItem);
+		swapUpdateIcons (secondItem);
+	}
 
-		if (inv [secondItem] != null) {
-			hud.items [secondItem].GetComponent<Image> ().sprite = Resources.Load<Sprite> (inv [secondItem].getPathToIcon ());
-			hud.items [secondItem].GetComponentInChildren<Text> ().text = getSlotStackSize (secondItem).ToString ();
+	private static void swapUpdateIcons (int itemPos) {
+		itemHUD_Controls hud = GameObject.Find ("ItemHUD").GetComponent<itemHUD_Controls>();
+
+		if (inv [itemPos] != null) {
+			hud.items [itemPos].GetComponent<Image> ().sprite = Resources.Load<Sprite> (inv [itemPos].getPathToIcon ());
+			hud.items [itemPos].GetComponentInChildren<Text> ().text = getSlotStackSize (itemPos).ToString ();
 		}
 		else {
-			hud.items [secondItem].GetComponent<Image> ().sprite = new Sprite();
-			hud.items[secondItem].GetComponent<Image> ().color = new Color32(146, 146, 146, 255);
-			hud.items [secondItem].GetComponentInChildren<Text> ().text = "0";
+			hud.items [itemPos].GetComponent<Image> ().sprite = new Sprite();
+			hud.items[itemPos].GetComponent<Image> ().color = new Color32(146, 146, 146, 255);
+			hud.items [itemPos].GetComponentInChildren<Text> ().text = "0";
 		}
 	}
 
