@@ -26,17 +26,17 @@ public class fleshgolem_Spawner : MonoBehaviour {
 				newGolem.thisOject.GetComponent<fleshgolem_AI>().golemSpawner = this.GetComponent<fleshgolem_Spawner>();
 				newGolem.thisOject.GetComponent<fleshgolem_AI>().setGolemSpawnerRef(newGolem);
 
-				StartCoroutine(spawnCooldown());
+				StartCoroutine(startSpawnerCooldown());
 			}
 		}
 	}
 
-	public void removeFromList(gameObjectNamer golem) {
+	public void removeGolem(gameObjectNamer golem) {
 
 		golems.Remove (golem);
 	}
 
-	IEnumerator spawnCooldown() {
+	IEnumerator startSpawnerCooldown() {
 		yield return new WaitForSeconds (10);
 		spawnReady = true;
 	}

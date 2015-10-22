@@ -7,7 +7,6 @@ using UnityEngine.UI;
 
 [Serializable]
 public static class Inventory {
-	static ItemStack itemStack;
 
 	static int maxInventorySize = 10;
 	static ItemStack[] inv = new ItemStack[10];

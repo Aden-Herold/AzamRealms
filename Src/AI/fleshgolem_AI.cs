@@ -44,7 +44,7 @@ public class fleshgolem_AI : MonoBehaviour {
 	void Update ()
 	{    
 		if (this.transform.position.y < -65) {
-			golemSpawner.removeFromList(golemSpawnerRef);
+			golemSpawner.removeGolem(golemSpawnerRef);
 			Instantiate(enemyKilled, hitBox.transform.position, enemyKilled.transform.rotation);
 			Destroy (this.gameObject);
 		}
@@ -153,7 +153,7 @@ public class fleshgolem_AI : MonoBehaviour {
 
 		if ((curHealth - damageAmount) <= 0) {
 			curHealth = 0;
-			golemSpawner.removeFromList(golemSpawnerRef);
+			golemSpawner.removeGolem(golemSpawnerRef);
 
 			Instantiate(enemyKilled, hitBox.transform.position, enemyKilled.transform.rotation);
 			Destroy (this.gameObject);

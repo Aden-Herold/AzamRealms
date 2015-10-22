@@ -5,11 +5,13 @@ using UnityEngine.UI;
 public class Player : MonoBehaviour {
 
 	private int maxHealth = 100;
-	private int curHealth = 100;
+	public int curHealth = 100;
 	private int healthBarHeight = 20;
 
 	public Text healthBarText;
 	public Image healthBar;
+
+	public bool updateHealth = false;
 
 	// Use this for initialization
 	void Start () {
@@ -18,6 +20,11 @@ public class Player : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+
+		if (updateHealth) {
+			updateHealthBar();
+		}
+
 	}
 	
 	private void updateHealthBar () {
